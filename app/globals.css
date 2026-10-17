@@ -504,6 +504,10 @@ body {
     overflow-x: hidden;
   }
 
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
   section {
     padding-left: 14px !important;
     padding-right: 14px !important;
@@ -522,6 +526,7 @@ body {
     font-size: 0.88rem !important;
   }
 
+  /* Floating Action Bar (Responsive Mobile) */
   .floating-action-bar {
     bottom: 14px !important;
     right: 12px !important;
@@ -539,77 +544,243 @@ body {
     height: 22px !important;
   }
 
+  /* Booking & General Modal (Mobile View) */
   .modal-content {
-    width: 92vw !important;
+    width: 94vw !important;
     max-width: 500px !important;
     max-height: 90vh !important;
     overflow-y: auto !important;
     padding: 20px 16px !important;
     border-radius: 18px !important;
   }
-}
 
-/* Continuous Sliding Marquee Ticker ("Chalta hua text animation") */
-@keyframes tickerSlide {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.ticker-track {
-  display: flex;
-  width: max-content;
-  animation: tickerSlide 28s linear infinite;
-}
-
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-/* Scroll-Driven Smooth Reveal Animations */
-.scroll-reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  filter: blur(2px);
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.65s ease;
-  will-change: opacity, transform, filter;
-}
-
-.scroll-reveal.is-revealed {
-  opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
-}
-
-/* Admin Sidebar Responsive Layout */
-.admin-sidebar-nav {
-  transform: translateX(0);
-}
-
-@media (max-width: 900px) {
-  .admin-sidebar-nav {
-    transform: translateX(-100%) !important;
+  /* Hero Section (Mobile View) - Full Uncropped Image */
+  #scroll-hero {
+    height: 88vh !important;
+    min-height: 540px !important;
   }
-  .admin-sidebar-nav.is-open {
-    transform: translateX(0) !important;
+
+  .hero-bg-img {
+    object-fit: contain !important;
+    object-position: center 18% !important;
+    padding: 8px !important;
   }
-  .admin-main-wrapper {
-    margin-left: 0 !important;
+
+  .hero-corner-content {
+    left: 16px !important;
+    right: 16px !important;
+    bottom: 64px !important;
+    max-width: 100% !important;
+  }
+
+  .hero-corner-content h1 {
+    font-size: 1.65rem !important;
+    line-height: 1.12 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .hero-corner-content p {
+    font-size: 0.82rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-btn-group {
+    display: flex !important;
+    gap: 8px !important;
     width: 100% !important;
   }
-  .admin-hamburger-btn {
-    display: flex !important;
-  }
-  .admin-mobile-close {
-    display: flex !important;
-  }
-}
 
-@keyframes blinkCursor {
-  0%, 100% {
-    opacity: 1;
+  .hero-btn-group button,
+  .hero-btn-group a {
+    flex: 1 1 auto !important;
+    justify-content: center !important;
+    padding: 10px 14px !important;
+    font-size: 0.8rem !important;
+    white-space: nowrap !important;
   }
-  50% {
-    opacity: 0;
+
+  .hero-corner-controls {
+    left: 16px !important;
+    right: 16px !important;
+    bottom: 16px !important;
+    justify-content: space-between !important;
+  }
+
+  /* 3D Turntable & Workshop Showcase (Mobile View) */
+  .turntable-card {
+    height: 310px !important;
+    border-radius: 18px !important;
+  }
+
+  .switcher-buttons-wrap {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .switcher-buttons-wrap .switcher-btn {
+    padding: 6px 8px !important;
+    gap: 6px !important;
+    width: 100% !important;
+    border-radius: 12px !important;
+  }
+
+  .switcher-buttons-wrap .switcher-btn > div:first-child {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .switcher-buttons-wrap .switcher-btn > div:last-child div:first-child {
+    font-size: 0.72rem !important;
+    line-height: 1.15 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 95px !important;
+  }
+
+  .switcher-buttons-wrap .switcher-btn > div:last-child div:last-child {
+    font-size: 0.62rem !important;
+  }
+
+  /* Tactile Interactive Buttons for Categories (Services & Before/After) */
+  .category-tabs-container,
+  .before-after-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    padding: 6px !important;
+    border-radius: 16px !important;
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .category-tabs-container .tab-btn,
+  .before-after-tabs .tab-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 8px !important;
+    border-radius: 12px !important;
+    font-size: 0.82rem !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.05) !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+
+  .category-tabs-container .tab-btn.is-active,
+  .before-after-tabs .tab-btn.is-active {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+    color: #ffffff !important;
+    border-color: #b45309 !important;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35) !important;
+  }
+
+  .services-whatsapp-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .view-mode-tabs {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  .view-mode-tabs button {
+    flex: 1 !important;
+    text-align: center !important;
+    padding: 5px 8px !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* Gallery Page (Mobile 2-Column Grid & Lightbox) */
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .gallery-grid > div {
+    height: 180px !important;
+    border-radius: 14px !important;
+  }
+
+  .lightbox-close-btn {
+    top: 14px !important;
+    right: 14px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .lightbox-arrow-left {
+    left: 8px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .lightbox-arrow-right {
+    right: 8px !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  /* Compact Mobile Footer */
+  .site-footer {
+    padding: 22px 14px 16px !important;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1 !important;
+    max-width: 100% !important;
+  }
+
+  .footer-desc {
+    display: none !important;
+  }
+
+  .footer-contact {
+    grid-column: 1 / -1 !important;
+    padding-top: 10px !important;
+    border-top: 1px dashed #e2e8f0 !important;
+  }
+
+  .footer-services h4,
+  .footer-company h4,
+  .footer-contact h4 {
+    font-size: 0.8rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  .footer-services div,
+  .footer-company div {
+    gap: 5px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .footer-bottom {
+    padding-top: 10px !important;
+    font-size: 0.72rem !important;
+    text-align: center !important;
+    justify-content: center !important;
+    flex-direction: column !important;
+    gap: 4px !important;
   }
 }
 

@@ -71,9 +71,9 @@ export default function TypewriterHeading({
       style={{ minHeight: '1.2em', ...style }}
       className={className}
     >
-      <span>{hasStarted ? displayedText : ''}</span>
+      <span>{hasStarted ? displayedText : text}</span>
       {highlightText && (
-        <span className="text-gradient-gold"> {hasStarted ? displayedHighlight : ''}</span>
+        <span className="text-gradient-gold"> {hasStarted ? displayedHighlight : highlightText}</span>
       )}
       {hasStarted && !isComplete && (
         <span

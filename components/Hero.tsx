@@ -8,8 +8,10 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  MessageCircle
 } from 'lucide-react';
+import { ServiceCategory } from '@/models/types';
 
 interface HeroSlide {
   id: number;
@@ -18,45 +20,51 @@ interface HeroSlide {
   subtitle: string;
   image: string;
   ctaText: string;
+  category: ServiceCategory;
 }
 
 const FOUR_VIP_SLIDES: HeroSlide[] = [
   {
     id: 1,
-    badge: 'HYDRAULIC RESTORATION',
-    title: 'SALON CHAIR REPAIR',
-    subtitle: 'Same-day hydraulic pump overhauls & chemical-proof leather.',
-    image: '/images/vip-salon-atelier.jpg',
-    ctaText: 'Book Doorstep Service'
+    badge: 'CLASS-4 BIFMA HYDRAULICS',
+    title: 'OFFICE CHAIR REPAIR',
+    subtitle: 'On-site sinking gas lift cylinder replacement, executive boss leather & wheels.',
+    image: '/images/office-chair-hydraulic-repair.jpg',
+    ctaText: 'Book Office Chair Fix',
+    category: 'office_chair'
   },
   {
     id: 2,
-    badge: 'LUXURY SOFA ATELIER',
-    title: 'SOFA & CUSHION REVIVAL',
-    subtitle: '40D orthopedic molded foam refilling & zero-sag leather care.',
-    image: '/images/luxury-curved-sofa.jpg',
-    ctaText: 'Book Sofa Service'
+    badge: 'MOTORIZED & MANUAL ATELIER',
+    title: 'RECLINER CHAIR REPAIR',
+    subtitle: 'Electric actuator motor fix, snapped release cable & luxury leather refilling.',
+    image: '/images/recliner-motorized-repair.jpg',
+    ctaText: 'Book Recliner Service',
+    category: 'recliner_chair'
   },
   {
     id: 3,
-    badge: 'COMMERCIAL FLEET CARE',
-    title: 'ZERO SALON DOWNTIME',
-    subtitle: 'Overnight maintenance, silent 360° swivel & German seals.',
-    image: '/images/bright-salon-chairs.jpg',
-    ctaText: 'Salon Fleet Service'
+    badge: 'HYDRAULIC RESTORATION',
+    title: 'SALON CHAIR REPAIR',
+    subtitle: 'Same-day salon hydraulic cylinder rebuilds, 250kg load tested & chemical-proof leather.',
+    image: '/images/vip-salon-atelier.jpg',
+    ctaText: 'Book Salon Chair Service',
+    category: 'salon_chair'
   },
   {
     id: 4,
-    badge: 'DOORSTEP WORKSHOP',
-    title: 'ON-SITE PERFECTION',
-    subtitle: 'Over 15,000 chairs and sofas restored in front of your eyes.',
-    image: '/images/bright-luxury-sofa.jpg',
-    ctaText: 'Schedule Technician'
+    badge: '40D ORTHOPEDIC MEMORY FOAM',
+    title: 'SOFA & CUSHION RESTORATION',
+    subtitle: '40D virgin molded foam core refilling, snapped spring repair & 3-year zero-sag guarantee.',
+    image: '/images/luxury-curved-sofa.jpg',
+    ctaText: 'Book Sofa Service',
+    category: 'sofa_repair'
   }
 ];
 
 export default function Hero() {
   const { openBookingModal } = useBooking();
+  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP || '919772381091';
   const [activeIndex, setActiveIndex] = useState(0);
   const total = FOUR_VIP_SLIDES.length;
 
@@ -128,12 +136,34 @@ export default function Hero() {
               zIndex: 1
             }}
           >
+            {/* Ambient soft glow backdrop for full uncropped image fill */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                opacity: 0.45,
+                filter: 'blur(22px)',
+                transform: 'scale(1.12)',
+                pointerEvents: 'none'
+              }}
+              className="hero-ambient-glow"
+            >
+              <Image
+                src={s.image}
+                alt=""
+                fill
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+
+            {/* Main Uncropped Sharp Image */}
             <Image
               src={s.image}
               alt={s.title}
               fill
               priority={idx <= 1}
-              style={{ objectFit: 'cover', objectPosition: 'center' }}
+              className="hero-bg-img"
+              style={{ objectPosition: 'center' }}
             />
             {/* Subtle corner gradient so text is readable while center remains completely open */}
             <div
@@ -253,29 +283,58 @@ export default function Hero() {
           {slide.subtitle}
         </p>
 
-        {/* Single Main CTA Button */}
-        <button
-          onClick={() => openBookingModal(null, activeIndex % 2 === 0 ? 'salon_chair' : 'sofa_repair')}
-          style={{
-            padding: '11px 22px',
-            borderRadius: '9999px',
-            background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-            color: '#ffffff',
-            border: 'none',
-            fontWeight: 800,
-            fontSize: '0.88rem',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            cursor: 'pointer',
-            boxShadow: '0 8px 24px -4px rgba(217, 119, 6, 0.65)'
-          }}
-          className="hover-lift"
-        >
-          <Calendar size={15} />
-          <span>{slide.ctaText}</span>
-          <ArrowRight size={14} />
-        </button>
+        {/* Action Buttons */}
+        <div className="hero-btn-group" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <button
+            onClick={() => openBookingModal(null, slide.category)}
+            style={{
+              padding: '11px 22px',
+              borderRadius: '9999px',
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              color: '#ffffff',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: '0.88rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              boxShadow: '0 8px 24px -4px rgba(217, 119, 6, 0.65)'
+            }}
+            className="hover-lift"
+          >
+            <Calendar size={15} />
+            <span>{slide.ctaText}</span>
+            <ArrowRight size={14} />
+          </button>
+
+          <a
+            href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
+              `Hi, I saw your ${slide.title} on the website. I have photos of my chair/sofa and need a quick repair quotation.`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: '11px 20px',
+              borderRadius: '9999px',
+              background: 'rgba(16, 185, 129, 0.9)',
+              color: '#ffffff',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              fontWeight: 800,
+              fontSize: '0.86rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              textDecoration: 'none',
+              boxShadow: '0 8px 20px -4px rgba(16, 185, 129, 0.5)',
+              backdropFilter: 'blur(8px)'
+            }}
+            className="hover-lift"
+          >
+            <MessageCircle size={15} />
+            <span>WhatsApp Photos</span>
+          </a>
+        </div>
       </div>
 
       {/* CORNER-SIDE CONTROLS (Bottom-Right Corner) */}

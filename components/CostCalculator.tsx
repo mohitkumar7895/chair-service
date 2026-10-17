@@ -2,33 +2,58 @@
 
 import React, { useState } from 'react';
 import { useBooking } from '@/context/BookingContext';
-import { Calculator, ArrowRight, Check } from 'lucide-react';
+import { Calculator, ArrowRight, Check, MessageCircle } from 'lucide-react';
 import { ServiceCategory, RepairUrgency } from '@/models/types';
 import TypewriterHeading from './TypewriterHeading';
 
 export default function CostCalculator() {
   const { openBookingModal } = useBooking();
+  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP || '919772381091';
 
-  const [category, setCategory] = useState<ServiceCategory>('salon_chair');
-  const [selectedIssue, setSelectedIssue] = useState<string>('hydraulic');
+  const [category, setCategory] = useState<ServiceCategory>('office_chair');
+  const [selectedIssue, setSelectedIssue] = useState<string>('office_hydraulic');
   const [quantity, setQuantity] = useState<number>(2);
   const [urgency, setUrgency] = useState<RepairUrgency>('normal');
 
-  const chairIssues = [
-    { id: 'hydraulic', label: 'Hydraulic Pump Sinking / Fluid Leak', basePrice: 999 },
-    { id: 'upholstery', label: 'Full Salon Chair Leather Re-Upholstery', basePrice: 1499 },
-    { id: 'swivel', label: '360° Swivel Base & Recliner Mechanism', basePrice: 799 },
-    { id: 'total_overhaul', label: 'Complete Barber Chair Restoration (Pump + Leather)', basePrice: 2299 }
+  const officeChairIssues = [
+    { id: 'office_hydraulic', label: 'Class-4 Gas Lift Hydraulic Cylinder (Sinking Fix)', basePrice: 699 },
+    { id: 'office_executive_leather', label: 'Executive Boss High-Back Leather & 40D Foam', basePrice: 1499 },
+    { id: 'office_mesh', label: 'Ergonomic Mesh Restring & Lumbar Spine Fix', basePrice: 899 },
+    { id: 'office_base_wheels', label: 'Chrome 5-Star Metal Base & Rollerblade Casters', basePrice: 799 },
+    { id: 'office_staff_cushion', label: 'Staff Workstation Chair Fabric & Re-padding', basePrice: 599 }
+  ];
+
+  const reclinerIssues = [
+    { id: 'recliner_motor', label: 'Motorized Electric Recliner Motor & Remote Fix', basePrice: 1799 },
+    { id: 'recliner_cable', label: 'Manual Recliner Release Pull Handle & Cable', basePrice: 899 },
+    { id: 'recliner_leather', label: 'Luxury Leather Recliner Re-Upholstery & 40D Foam', basePrice: 2499 },
+    { id: 'recliner_barber', label: 'Barber & Salon Reclining Hydraulic Chair Overhaul', basePrice: 1299 }
+  ];
+
+  const salonChairIssues = [
+    { id: 'salon_hydraulic', label: 'Salon Hydraulic Pump Sinking / Fluid Leak Overhaul', basePrice: 999 },
+    { id: 'salon_upholstery', label: 'Chemical-Proof Diamond Leather Reupholstery', basePrice: 1499 },
+    { id: 'salon_swivel', label: '360° Swivel Base & Recliner Gas Spring Overhaul', basePrice: 799 },
+    { id: 'salon_shampoo', label: 'Shampoo Basin Tilt Mechanism & Anti-Leak Seal', basePrice: 1199 }
   ];
 
   const sofaIssues = [
-    { id: 'foam', label: 'High-Density 40D Foam Cushion Refilling', basePrice: 1299 },
-    { id: 'upholstery_sofa', label: 'Designer Fabric / Velvet Re-Upholstery', basePrice: 1899 },
-    { id: 'leather', label: 'Genuine Leather Crack Repair & Color Match', basePrice: 2699 },
-    { id: 'frame_spring', label: 'Broken Frame Joints & Spring Retensioning', basePrice: 899 }
+    { id: 'sofa_foam', label: 'High-Density 40D Virgin Foam Cushion Refilling', basePrice: 1299 },
+    { id: 'sofa_upholstery', label: 'Designer Fabric / Velvet Re-Upholstery', basePrice: 1899 },
+    { id: 'sofa_leather', label: 'Genuine Leather Crack Repair & Color Match', basePrice: 2699 },
+    { id: 'sofa_frame_spring', label: 'Broken Frame Joints & Spring Retensioning', basePrice: 899 }
   ];
 
-  const currentIssues = category === 'salon_chair' ? chairIssues : sofaIssues;
+  const getIssuesForCategory = () => {
+    switch (category) {
+      case 'office_chair': return officeChairIssues;
+      case 'recliner_chair': return reclinerIssues;
+      case 'salon_chair': return salonChairIssues;
+      case 'sofa_repair': return sofaIssues;
+    }
+  };
+
+  const currentIssues = getIssuesForCategory();
   const activeIssueObj = currentIssues.find((i) => i.id === selectedIssue) || currentIssues[0];
 
   // Calculate pricing
@@ -41,10 +66,10 @@ export default function CostCalculator() {
   };
 
   return (
-    <section id="calculator" style={{ padding: '90px 20px', background: '#f8fafc', position: 'relative' }}>
-      <div style={{ maxWidth: '1040px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '45px' }}>
-          <div className="badge-gold" style={{ marginBottom: '14px' }}>
+    <section id="calculator" style={{ padding: '80px 20px', background: '#f8fafc', position: 'relative' }}>
+      <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <div className="badge-gold" style={{ marginBottom: '12px' }}>
             <Calculator size={14} />
             <span>Instant Transparent Pricing</span>
           </div>
@@ -52,149 +77,132 @@ export default function CostCalculator() {
             text="Calculate Your"
             highlightText="Repair Estimate"
             style={{
-              fontSize: 'clamp(2rem, 3.2vw, 2.8rem)',
+              fontSize: 'clamp(2rem, 3.2vw, 2.7rem)',
               fontWeight: 800,
               letterSpacing: '-0.02em',
-              marginBottom: '14px',
+              marginBottom: '12px',
               color: '#0f172a'
             }}
           />
-          <p style={{ color: '#475569', fontSize: '1.05rem', maxWidth: '620px', margin: '0 auto' }}>
-            No hidden fees, no surprises. Select your furniture type, repair requirements, and urgency to see an instant estimate.
+          <p style={{ color: '#475569', fontSize: '1rem', maxWidth: '640px', margin: '0 auto' }}>
+            Zero hidden fees. Choose your chair or furniture type, select the issue, and get an instant doorstep estimate with 1-year guarantee.
           </p>
         </div>
 
         <div
           className="glass-panel"
           style={{
-            padding: '36px',
+            padding: '32px',
             borderRadius: '24px',
             background: '#ffffff',
             boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.08)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '36px'
+            gap: '32px'
           }}
         >
           {/* Controls Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
             {/* Step 1: Category */}
             <div>
               <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '10px' }}>
-                1. Select Furniture Type
+                1. Select Chair / Furniture Type
               </label>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCategory('salon_chair');
-                    setSelectedIssue('hydraulic');
-                  }}
-                  style={{
-                    padding: '12px',
-                    borderRadius: '12px',
-                    fontWeight: 700,
-                    fontSize: '0.92rem',
-                    textAlign: 'center',
-                    border: '1px solid',
-                    borderColor: category === 'salon_chair' ? '#d97706' : '#e2e8f0',
-                    background: category === 'salon_chair' ? '#fef3c7' : '#ffffff',
-                    color: category === 'salon_chair' ? '#92400e' : '#475569',
-                    boxShadow: category === 'salon_chair' ? '0 4px 12px rgba(217, 119, 6, 0.15)' : 'none',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  ✂️ Salon Chair
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCategory('sofa_repair');
-                    setSelectedIssue('foam');
-                  }}
-                  style={{
-                    padding: '12px',
-                    borderRadius: '12px',
-                    fontWeight: 700,
-                    fontSize: '0.92rem',
-                    textAlign: 'center',
-                    border: '1px solid',
-                    borderColor: category === 'sofa_repair' ? '#d97706' : '#e2e8f0',
-                    background: category === 'sofa_repair' ? '#fef3c7' : '#ffffff',
-                    color: category === 'sofa_repair' ? '#92400e' : '#475569',
-                    boxShadow: category === 'sofa_repair' ? '0 4px 12px rgba(217, 119, 6, 0.15)' : 'none',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  🛋️ Sofa / Couch
-                </button>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                {[
+                  { key: 'office_chair', label: '💺 Office Chair', firstIssue: 'office_hydraulic' },
+                  { key: 'recliner_chair', label: '🛋️ Recliner', firstIssue: 'recliner_motor' },
+                  { key: 'salon_chair', label: '✂️ Salon Chair', firstIssue: 'salon_hydraulic' },
+                  { key: 'sofa_repair', label: '🛋️ Sofa & Couch', firstIssue: 'sofa_foam' }
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => {
+                      setCategory(item.key as ServiceCategory);
+                      setSelectedIssue(item.firstIssue);
+                    }}
+                    style={{
+                      padding: '11px',
+                      borderRadius: '12px',
+                      fontWeight: 700,
+                      fontSize: '0.88rem',
+                      textAlign: 'center',
+                      border: '1px solid',
+                      borderColor: category === item.key ? '#d97706' : '#e2e8f0',
+                      background: category === item.key ? '#fef3c7' : '#ffffff',
+                      color: category === item.key ? '#92400e' : '#475569',
+                      boxShadow: category === item.key ? '0 4px 12px rgba(217, 119, 6, 0.15)' : 'none',
+                      transition: 'all 0.2s ease',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </div>
             </div>
 
             {/* Step 2: Issue */}
             <div>
               <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '10px' }}>
-                2. Select Primary Issue / Work Needed
+                2. Select Repair Requirement
               </label>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {currentIssues.map((issue) => (
-                  <div
+                  <button
                     key={issue.id}
+                    type="button"
                     onClick={() => setSelectedIssue(issue.id)}
                     style={{
-                      padding: '12px 16px',
+                      padding: '11px 14px',
                       borderRadius: '12px',
+                      fontSize: '0.88rem',
+                      fontWeight: 600,
+                      textAlign: 'left',
                       border: '1px solid',
                       borderColor: selectedIssue === issue.id ? '#d97706' : '#e2e8f0',
-                      background: selectedIssue === issue.id ? '#fffbeb' : '#ffffff',
-                      cursor: 'pointer',
+                      background: selectedIssue === issue.id ? '#fffbeb' : '#f8fafc',
+                      color: selectedIssue === issue.id ? '#92400e' : '#334155',
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      boxShadow: selectedIssue === issue.id ? '0 2px 8px rgba(217, 119, 6, 0.1)' : 'none',
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.15s ease',
+                      cursor: 'pointer'
                     }}
                   >
-                    <span style={{ fontSize: '0.92rem', color: selectedIssue === issue.id ? '#92400e' : '#334155', fontWeight: selectedIssue === issue.id ? 700 : 500 }}>
-                      {issue.label}
+                    <span>{issue.label}</span>
+                    <span style={{ fontWeight: 800, color: selectedIssue === issue.id ? '#b45309' : '#64748b', fontSize: '0.86rem' }}>
+                      From ₹{issue.basePrice}
                     </span>
-                    <span style={{ fontSize: '0.85rem', color: '#b45309', fontWeight: 800 }}>
-                      ₹{issue.basePrice}/ea
-                    </span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
 
             {/* Step 3: Quantity */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  3. Quantity / Number of {category === 'salon_chair' ? 'Chairs' : 'Seats'}
-                </label>
-                <span style={{ fontWeight: 800, color: '#0f172a', fontSize: '1rem' }}>
-                  {quantity} {quantity === 1 ? 'Unit' : 'Units'}
-                </span>
-              </div>
-
+              <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '8px' }}>
+                3. Number of Chairs / Items: <strong style={{ color: '#0f172a' }}>{quantity}</strong>
+              </label>
               <div style={{ display: 'flex', gap: '8px' }}>
-                {[1, 2, 3, 4, 5, 8].map((num) => (
+                {[1, 2, 4, 8, 12].map((num) => (
                   <button
                     key={num}
                     type="button"
                     onClick={() => setQuantity(num)}
                     style={{
                       flex: 1,
-                      padding: '10px 0',
+                      padding: '9px',
                       borderRadius: '10px',
                       fontWeight: 700,
-                      fontSize: '0.92rem',
+                      fontSize: '0.88rem',
                       border: '1px solid',
-                      borderColor: quantity === num ? '#d97706' : '#e2e8f0',
-                      background: quantity === num ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : '#ffffff',
+                      borderColor: quantity === num ? '#d97706' : '#cbd5e1',
+                      background: quantity === num ? '#d97706' : '#ffffff',
                       color: quantity === num ? '#ffffff' : '#475569',
-                      boxShadow: quantity === num ? '0 4px 10px rgba(217, 119, 6, 0.3)' : 'none'
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease'
                     }}
                   >
                     {num}
@@ -205,132 +213,125 @@ export default function CostCalculator() {
 
             {/* Step 4: Urgency */}
             <div>
-              <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '10px' }}>
-                4. Turnaround Timeline
+              <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '8px' }}>
+                4. Visit Urgency
               </label>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                 {[
-                  { id: 'normal', label: 'Standard (1-3 Days)', extra: 'Standard' },
-                  { id: 'same_day', label: 'Same Day', extra: '+15%' },
-                  { id: 'emergency', label: 'Emergency (2-4 hrs)', extra: '+25%' }
-                ].map((item) => (
+                  { key: 'normal', label: 'Standard Visit', sub: 'Tomorrow' },
+                  { key: 'same_day', label: 'Same Day', sub: 'Within 4 hrs' },
+                  { key: 'emergency', label: 'Immediate', sub: 'Urgent 2 hrs' }
+                ].map((urg) => (
                   <button
-                    key={item.id}
+                    key={urg.key}
                     type="button"
-                    onClick={() => setUrgency(item.id as RepairUrgency)}
+                    onClick={() => setUrgency(urg.key as RepairUrgency)}
                     style={{
-                      padding: '10px 8px',
+                      padding: '9px 8px',
                       borderRadius: '10px',
-                      fontSize: '0.82rem',
-                      fontWeight: 600,
-                      textAlign: 'center',
                       border: '1px solid',
-                      borderColor: urgency === item.id ? '#059669' : '#e2e8f0',
-                      background: urgency === item.id ? '#d1fae5' : '#ffffff',
-                      color: urgency === item.id ? '#065f46' : '#64748b'
+                      borderColor: urgency === urg.key ? '#d97706' : '#cbd5e1',
+                      background: urgency === urg.key ? '#fffbeb' : '#ffffff',
+                      color: urgency === urg.key ? '#92400e' : '#475569',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease'
                     }}
                   >
-                    <div>{item.label}</div>
-                    <div style={{ fontSize: '0.72rem', opacity: 0.85, marginTop: '2px', fontWeight: 700 }}>{item.extra}</div>
+                    <div style={{ fontWeight: 700, fontSize: '0.82rem' }}>{urg.label}</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{urg.sub}</div>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Result Column */}
+          {/* Result Card Column */}
           <div
             style={{
-              background: 'linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%)',
-              border: '1px solid #fde68a',
+              background: 'linear-gradient(145deg, #0f172a 0%, #1e293b 100%)',
               borderRadius: '20px',
-              padding: '30px',
+              padding: '28px',
+              color: '#ffffff',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: '0 15px 35px rgba(217, 119, 6, 0.1)'
+              boxShadow: '0 15px 35px -5px rgba(15, 23, 42, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.08)'
             }}
           >
             <div>
-              <div style={{ fontSize: '0.85rem', color: '#92400e', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>
-                Estimated Service Quote
+              <div style={{ fontSize: '0.82rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700, marginBottom: '6px' }}>
+                Estimated Total (Parts & Doorstep Labor)
               </div>
-              <div
-                style={{
-                  fontSize: 'clamp(2.5rem, 4vw, 3.2rem)',
-                  fontWeight: 800,
-                  color: '#b45309',
-                  margin: '8px 0 16px',
-                  lineHeight: 1
-                }}
-              >
-                ₹{totalEstimated.toLocaleString()}
-                <span style={{ fontSize: '1rem', color: '#78350f', fontWeight: 600, marginLeft: '6px' }}>
-                  (approx. ${Math.round(totalEstimated / 83)})
-                </span>
+              <div style={{ fontSize: 'clamp(2.4rem, 4vw, 3.2rem)', fontWeight: 900, color: '#fbbf24', letterSpacing: '-0.02em', lineHeight: 1 }}>
+                ₹{totalEstimated.toLocaleString('en-IN')}
+              </div>
+              <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '6px' }}>
+                *Free doorstep inspection included with repairs. Genuine OEM spares.
               </div>
 
-              <div
-                style={{
-                  background: '#ffffff',
-                  padding: '16px',
-                  borderRadius: '12px',
-                  border: '1px solid #fde68a',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '10px',
-                  fontSize: '0.88rem',
-                  color: '#334155',
-                  marginBottom: '24px'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Service:</span>
-                  <span style={{ fontWeight: 700, color: '#0f172a' }}>{activeIssueObj.label}</span>
+              {/* Breakdown summary */}
+              <div style={{ marginTop: '24px', paddingTop: '18px', borderTop: '1px solid rgba(255, 255, 255, 0.12)', display: 'flex', flexDirection: 'column', gap: '9px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem' }}>
+                  <span style={{ color: '#94a3b8' }}>Service:</span>
+                  <span style={{ fontWeight: 700, textAlign: 'right', maxWidth: '200px' }}>{activeIssueObj.label}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Units:</span>
-                  <span style={{ fontWeight: 700, color: '#0f172a' }}>{quantity} Items</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem' }}>
+                  <span style={{ color: '#94a3b8' }}>Quantity:</span>
+                  <span style={{ fontWeight: 700 }}>{quantity} units</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Timeline:</span>
-                  <span style={{ fontWeight: 700, color: urgency === 'emergency' ? '#dc2626' : '#059669' }}>
-                    {urgency.replace('_', ' ').toUpperCase()}
-                  </span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Warranty:</span>
-                  <span style={{ fontWeight: 700, color: '#b45309' }}>12 Months Written</span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.82rem', color: '#78350f' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Check size={15} color="#059669" />
-                  <span>Includes all authentic parts, high-density foam & hardware</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Check size={15} color="#059669" />
-                  <span>Free doorstep technician visit & inspection</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Check size={15} color="#059669" />
-                  <span>On-site service in front of your eyes</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem' }}>
+                  <span style={{ color: '#94a3b8' }}>Warranty Included:</span>
+                  <span style={{ color: '#34d399', fontWeight: 700 }}>12-Month Written Warranty</span>
                 </div>
               </div>
             </div>
 
-            <div style={{ marginTop: '28px' }}>
+            <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <button
-                type="button"
                 onClick={handleBookWithEstimate}
                 className="btn-gold"
-                style={{ width: '100%', padding: '14px', fontSize: '1rem' }}
-                id="calculator-book-now-btn"
+                style={{
+                  width: '100%',
+                  padding: '13px',
+                  fontSize: '0.94rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  boxShadow: '0 8px 20px rgba(217, 119, 6, 0.5)'
+                }}
               >
-                <span>Book Repair At This Quote</span>
-                <ArrowRight size={18} />
+                <span>Book Doorstep Visit</span>
+                <ArrowRight size={16} />
               </button>
+
+              <a
+                href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
+                  `Hi, I calculated an estimate of ₹${totalEstimated} for ${quantity} items of ${activeIssueObj.label}. Can I share photos on WhatsApp for verification?`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: 'rgba(16, 185, 129, 0.2)',
+                  border: '1px solid rgba(16, 185, 129, 0.5)',
+                  color: '#34d399',
+                  borderRadius: '9999px',
+                  padding: '11px',
+                  fontSize: '0.86rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <MessageCircle size={15} />
+                <span>WhatsApp Photos for Exact Quote</span>
+              </a>
             </div>
           </div>
         </div>

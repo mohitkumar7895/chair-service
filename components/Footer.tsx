@@ -11,11 +11,12 @@ export default function Footer() {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP || '919772381091';
   const address = process.env.NEXT_PUBLIC_ADDRESS || 'Shop No 305, Sector 55, Gurgaon';
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    'Hello! I need doorstep Salon Chair / Sofa repair service.'
+    'Hello! I need doorstep Office Chair / Recliner / Salon Chair repair service.'
   )}`;
 
   return (
     <footer
+      className="site-footer"
       style={{
         background: '#ffffff',
         borderTop: '1px solid #e2e8f0',
@@ -26,6 +27,7 @@ export default function Footer() {
       <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
         {/* Main VIP Row */}
         <div
+          className="footer-grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -34,13 +36,13 @@ export default function Footer() {
           }}
         >
           {/* Brand Info */}
-          <div style={{ maxWidth: '340px' }}>
+          <div className="footer-brand" style={{ maxWidth: '340px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
               <div
                 style={{
                   width: '34px',
                   height: '34px',
-                  borderRadius: '9px',
+                  borderRadius: '9999px',
                   background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
                   display: 'flex',
                   alignItems: 'center',
@@ -52,12 +54,12 @@ export default function Footer() {
                 <Wrench size={16} strokeWidth={2.5} />
               </div>
               <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>
-                Salon Chair <span style={{ color: '#d97706' }}>&</span> Sofa Repair
+                Office <span style={{ color: '#d97706' }}>&</span> Recliner Repair
               </div>
             </div>
 
-            <p style={{ color: '#64748b', fontSize: '0.84rem', lineHeight: 1.5, margin: '0 0 12px' }}>
-              Commercial salon equipment overhauls & luxury sofa restorations completed directly on-site with 100% genuine spares.
+            <p className="footer-desc" style={{ color: '#64748b', fontSize: '0.84rem', lineHeight: 1.5, margin: '0 0 12px' }}>
+              Doorstep repairs for all office chairs (gas lift hydraulic, mesh, wheels), motorized & manual recliners, salon equipment & sofas with 100% genuine spares.
             </p>
 
             <div
@@ -80,35 +82,42 @@ export default function Footer() {
           </div>
 
           {/* Quick Links Column */}
-          <div>
+          <div className="footer-services">
             <h4 style={{ color: '#0f172a', fontWeight: 800, fontSize: '0.85rem', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Services Catalog
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '0.84rem', color: '#475569' }}>
-              <Link href="/services/salon-hydraulic-pump" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
-                Hydraulic Pump Overhaul
+              <Link href="/services/office-hydraulic-cylinder-lift" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
+                Office Chair Gas Lift Repair
               </Link>
-              <Link href="/services/salon-chair-upholstery" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
-                Salon Chair Re-Upholstery
+              <Link href="/services/recliner-motorized-electric-repair" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
+                Motorized Recliner Actuator Fix
+              </Link>
+              <Link href="/services/office-executive-leather-overhaul" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
+                Boss Executive Chair Overhaul
+              </Link>
+              <Link href="/services/recliner-manual-mechanism-cable" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
+                Manual Recliner Cable & Spring
+              </Link>
+              <Link href="/services/salon-hydraulic-pump" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
+                Salon Chair Hydraulic Pump
               </Link>
               <Link href="/services/sofa-foam-cushion-refill" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
                 40D Sofa Cushion Refilling
-              </Link>
-              <Link href="/services/sofa-leather-restoration" style={{ color: 'inherit', textDecoration: 'none' }} className="hover-link">
-                Chesterfield Leather Restoration
               </Link>
             </div>
           </div>
 
           {/* Explore Links Column */}
-          <div>
+          <div className="footer-company">
             <h4 style={{ color: '#0f172a', fontWeight: 800, fontSize: '0.85rem', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Company & Results
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', fontSize: '0.84rem', color: '#475569' }}>
-              <Link href="/before-after" style={{ color: 'inherit', textDecoration: 'none' }}>Before & After Portfolio</Link>
+              <Link href="/before-after" style={{ color: 'inherit', textDecoration: 'none' }}>Before & After</Link>
               <Link href="/why-choose-us" style={{ color: 'inherit', textDecoration: 'none' }}>Why Choose Us</Link>
-              <Link href="/contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact & Inquiry</Link>
+              <Link href="/gallery" style={{ color: 'inherit', textDecoration: 'none' }}>Gallery</Link>
+              <Link href="/contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact</Link>
               <Link href="/admin" style={{ color: '#d97706', textDecoration: 'none', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 <UserCog size={13} />
                 <span>Admin Portal</span>
@@ -117,7 +126,7 @@ export default function Footer() {
           </div>
 
           {/* Direct Contact Helpline */}
-          <div>
+          <div className="footer-contact">
             <h4 style={{ color: '#0f172a', fontWeight: 800, fontSize: '0.85rem', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Doorstep Helpline
             </h4>
@@ -165,6 +174,7 @@ export default function Footer() {
 
         {/* Compact Bottom Copyright Row */}
         <div
+          className="footer-bottom"
           style={{
             borderTop: '1px solid #f1f5f9',
             paddingTop: '16px',
@@ -178,7 +188,7 @@ export default function Footer() {
           }}
         >
           <div>
-            © {new Date().getFullYear()} Salon Chair & Sofa Repair Service. All rights reserved.
+            © {new Date().getFullYear()} Salon Chair & Sofa Repair Service.
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <span>Same-Day Doorstep Service</span>

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useBooking } from '@/context/BookingContext';
-import { Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MapPin, ShieldCheck, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 import TypewriterHeading from './TypewriterHeading';
 
 export default function ContactSection() {
@@ -11,7 +11,7 @@ export default function ContactSection() {
     name: '',
     phone: '',
     email: '',
-    category: 'salon_chair',
+    category: 'office_chair',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +43,7 @@ export default function ContactSection() {
 
       setSubmitted(true);
       showToast('success', 'Inquiry Sent', 'Our service coordinator will call you within 15 minutes.');
-      setFormData({ name: '', phone: '', email: '', category: 'salon_chair', message: '' });
+      setFormData({ name: '', phone: '', email: '', category: 'office_chair', message: '' });
     } catch (err: any) {
       showToast('error', 'Error', err.message || 'Something went wrong');
     } finally {
@@ -71,7 +71,7 @@ export default function ContactSection() {
             }}
           />
           <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.5 }}>
-            Have a commercial salon contract or residential sofa inquiry? Speak directly with our master technicians.
+            Need fast doorstep repair for office chairs, motorized/manual recliners, salon equipment, or sofas? Speak directly with our master technicians.
           </p>
         </div>
 
@@ -221,26 +221,26 @@ export default function ContactSection() {
                   width: '52px',
                   height: '52px',
                   borderRadius: '14px',
-                  background: '#f5f3ff',
-                  border: '1px solid #ddd6fe',
+                  background: '#ecfdf5',
+                  border: '1px solid #a7f3d0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#7c3aed',
+                  color: '#059669',
                   flexShrink: 0
                 }}
               >
-                <Clock size={24} />
+                <ShieldCheck size={24} />
               </div>
               <div>
                 <div style={{ fontSize: '0.82rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 700 }}>
-                  Operational Timings
+                  Quality & Spares Guarantee
                 </div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0f172a', marginTop: '2px' }}>
-                  Monday – Sunday: 8:00 AM – 9:00 PM
+                  100% Genuine Class-4 & Heavy-Duty Parts
                 </div>
                 <div style={{ fontSize: '0.85rem', color: '#059669', marginTop: '2px', fontWeight: 700 }}>
-                  24/7 Emergency Service for Registered Salons
+                  Doorstep Inspection • Up to 3-Year Warranty
                 </div>
               </div>
             </div>
@@ -361,9 +361,11 @@ export default function ContactSection() {
                         outline: 'none'
                       }}
                     >
-                      <option value="salon_chair">Salon Chair Repair (Hydraulic, Recliner, Leather)</option>
-                      <option value="sofa_repair">Sofa Repair (Foam, Leatherette, Springs)</option>
-                      <option value="commercial">Commercial Salon / Barbershop Contract</option>
+                      <option value="office_chair">Office Chair Repair (Hydraulic Cylinder, Mesh, Wheels, Tilt Mechanism)</option>
+                      <option value="recliner_chair">Recliner Chair Repair (Motorized Actuator, Manual Cable, Leather)</option>
+                      <option value="salon_chair">Salon Chair Repair (Hydraulic, Barber Recliner, Basin)</option>
+                      <option value="sofa_repair">Sofa Repair (Sagging Foam, Springs, Fabric/Leatherette)</option>
+                      <option value="commercial">Corporate Office / Commercial Fleet Contract</option>
                     </select>
                   </div>
 
@@ -399,7 +401,7 @@ export default function ContactSection() {
                     rows={2}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Tell us about the issue (e.g. 3 salon hydraulic chairs sinking down, 5-seater sofa cushions sagging in middle, address/location)..."
+                    placeholder="Tell us about the issue (e.g. 5 office chairs sinking down, electric recliner motor not closing footrest, address/location)..."
                     style={{
                       width: '100%',
                       padding: '9px 12px',

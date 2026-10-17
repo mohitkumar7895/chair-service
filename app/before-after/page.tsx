@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function BeforeAfterPage() {
   return (
-    <main style={{ background: '#f8fafc', minHeight: '100vh' }}>
+    <main style={{ background: '#f8fafc', minHeight: '100vh', paddingTop: '64px' }}>
       <Navbar />
 
       {/* Main Before After Component */}

@@ -1,6 +1,6 @@
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
-import ScrollTicker from '@/components/ScrollTicker';
+import RotatingChairRepairShowcase from '@/components/RotatingChairRepairShowcase';
 import ScrollRevealInit from '@/components/ScrollRevealInit';
 import ServicesSection from '@/components/ServicesSection';
 import BeforeAfterSection from '@/components/BeforeAfterSection';
@@ -16,7 +16,7 @@ export default function Home() {
       <ScrollRevealInit />
       <Navbar />
       <Hero />
-      <ScrollTicker />
+      <RotatingChairRepairShowcase />
       <ServicesSection isHomePage={true} />
       <BeforeAfterSection />
       <WhyChooseUs />

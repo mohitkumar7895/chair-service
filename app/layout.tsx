@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import ToastContainer from '@/components/ToastContainer';
 import BookingModal from '@/components/BookingModal';
 import BottomActionBar from '@/components/BottomActionBar';
+import ScrollRevealInit from '@/components/ScrollRevealInit';
 
 export const metadata: Metadata = {
   title: 'Salon Chair Repair and Sofa Repair Service | On-Site Hydraulic & Upholstery Specialists',
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <BookingProvider>
+            <ScrollRevealInit />
             {children}
             <BookingModal />
             <ToastContainer />

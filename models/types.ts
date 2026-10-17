@@ -1,4 +1,4 @@
-export type ServiceCategory = 'salon_chair' | 'sofa_repair';
+export type ServiceCategory = 'office_chair' | 'recliner_chair' | 'salon_chair' | 'sofa_repair';
 
 export type RepairUrgency = 'normal' | 'same_day' | 'emergency';
 
@@ -81,7 +81,18 @@ export interface AdminStats {
   completedRepairs: number;
   cancelledRepairs: number;
   estimatedRevenue: number;
+  officeChairBookings?: number;
+  reclinerBookings?: number;
   salonChairBookings: number;
   sofaBookings: number;
   totalInquiries: number;
+}
+
+export interface GalleryItem {
+  id: string;
+  title: string;
+  category: ServiceCategory | 'all';
+  imageUrl: string;
+  description?: string;
+  createdAt: string;
 }

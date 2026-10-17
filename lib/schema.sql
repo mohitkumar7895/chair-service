@@ -9,7 +9,7 @@ USE salon_sofa_repair;
 CREATE TABLE IF NOT EXISTS services (
   id VARCHAR(64) PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  category ENUM('salon_chair', 'sofa_repair') NOT NULL,
+  category ENUM('office_chair', 'recliner_chair', 'salon_chair', 'sofa_repair') NOT NULL,
   short_description TEXT NOT NULL,
   detailed_description TEXT,
   starting_price DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   email VARCHAR(255),
   address TEXT NOT NULL,
   city VARCHAR(100) NOT NULL,
-  category ENUM('salon_chair', 'sofa_repair') NOT NULL,
+  category ENUM('office_chair', 'recliner_chair', 'salon_chair', 'sofa_repair') NOT NULL,
   service_id VARCHAR(64),
   service_name VARCHAR(255) NOT NULL,
   item_count INT DEFAULT 1,

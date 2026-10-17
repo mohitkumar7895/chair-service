@@ -10,93 +10,115 @@ import {
   Sparkles, 
   ArrowRight, 
   Calendar, 
-  Clock, 
   Eye,
   Check
 } from 'lucide-react';
 import TypewriterHeading from './TypewriterHeading';
 
+import { ServiceCategory } from '@/models/types';
+
 interface ProjectWork {
   id: string;
-  category: 'salon_chair' | 'sofa_repair';
+  category: ServiceCategory;
   serviceName: string;
   tag: string;
   heading: string;
   description: string;
   workDone: string[];
-  turnaround: string;
   warranty: string;
   image: string;
 }
 
 const PROJECTS_DATA: ProjectWork[] = [
   {
-    id: 'work-1',
-    category: 'salon_chair',
-    serviceName: 'Hydraulic Pump & Base Repair',
-    tag: 'HYDRAULIC PUMP & CYLINDER OVERHAUL',
-    heading: 'Fixed Sinking Salon Chair & Restored 250kg Smooth Hydraulic Lift',
-    description: 'A busy salon styling chair was sinking down under client weight and leaking hydraulic fluid on the salon tile floor. Our technician completed the full rebuild on-site.',
+    id: 'work-office-hydraulic',
+    category: 'office_chair',
+    serviceName: 'Class-4 Gas Lift Cylinder & Base Replacement',
+    tag: 'OFFICE CHAIR SINKING HYDRAULIC RESTORATION',
+    heading: 'Fixed Sinking Office Chair with Class-4 BIFMA Certified Pneumatic Lift',
+    description: 'Executive chair continuously sinking to lowest height. Completely overhauled with heavy-duty nitrogen lift on-site.',
     workDone: [
-      'Dismantled failing hydraulic cylinder and flushed contaminated fluid',
-      'Installed high-pressure nitrile rubber O-rings & dual anti-leak oil seals',
-      'Re-machined piston rod and adjusted foot pedal locking valve',
-      'Weight-tested under 250kg load with 100% stable height holding'
+      'Installed Class-4 BIFMA nitrogen gas cylinder rated for 200kg load',
+      'Serviced chrome 5-star base & fitted silent anti-scratch wheels',
+      'Calibrated tilt lock mechanism and lubricated tension spring'
     ],
-    turnaround: 'Completed in 2 Hours On-Site',
+    warranty: '2-Year Replacement Warranty on Cylinder',
+    image: '/images/office-chair-hydraulic-repair.jpg'
+  },
+  {
+    id: 'work-recliner-motor',
+    category: 'recliner_chair',
+    serviceName: 'Motorized Electric Recliner Actuator Repair',
+    tag: 'ELECTRIC MOTORIZED RECLINER MECHANISM',
+    heading: 'Restored Jammed Electric Recliner Actuator Motor & Wireless Remote',
+    description: 'Stuck motorized recliner diagnosed and repaired on-site with zero furniture transport hassle.',
+    workDone: [
+      'Diagnosed 29V DC power supply adapter & hand remote controller',
+      'Replaced worn internal drive gears in linear actuator motor',
+      'Calibrated auto-stop limit switches and lubricated pivot linkages'
+    ],
+    warranty: '12 Months Electric Motor Guarantee',
+    image: '/images/recliner-motorized-repair.jpg'
+  },
+  {
+    id: 'work-boss-leather',
+    category: 'office_chair',
+    serviceName: 'Executive Boss High-Back Re-Upholstery',
+    tag: 'EXECUTIVE BOSS CHAIR OVERHAUL & 40D FOAM',
+    heading: 'Reupholstered Peeling Boss Chair with Breathable Nappa Leatherette',
+    description: 'Peeling faux leather stripped down and restored with high-density molded foam and breathable leatherette.',
+    workDone: [
+      'Stripped peeling outer skin down to ergonomic wooden shell',
+      'Injected 40D high-resilience memory foam for lumbar support',
+      'Fitted anti-sweat breathable leatherette with reinforced seams'
+    ],
+    warranty: '3-Year Anti-Peel & Foam Sag Guarantee',
+    image: '/images/office-chair-executive-black.jpg'
+  },
+  {
+    id: 'work-manual-recliner',
+    category: 'recliner_chair',
+    serviceName: 'Manual Recliner Cable & Spring Mechanism',
+    tag: 'MANUAL RECLINER PULL HANDLE & FOOTREST',
+    heading: 'Replaced Snapped Recliner Pull Cable & Balanced Heavy-Duty Tension Springs',
+    description: 'Broken release cable and loose footrest mechanism completely restored on-site.',
+    workDone: [
+      'Replaced snapped release pull cable with reinforced alloy cable',
+      'Re-anchored heavy-gauge high-tension footrest return springs',
+      'Cleaned mechanical tracks and applied anti-friction lubricant'
+    ],
+    warranty: '12 Months Mechanism Warranty',
+    image: '/images/recliner-chair-black-tufted.jpg'
+  },
+  {
+    id: 'work-salon-hydraulic',
+    category: 'salon_chair',
+    serviceName: 'Salon Hydraulic Pump & Base Repair',
+    tag: 'SALON HYDRAULIC PUMP & CYLINDER OVERHAUL',
+    heading: 'Fixed Sinking Salon Chair & Restored 250kg Smooth Hydraulic Lift',
+    description: 'Leaking hydraulic oil and dropping chair height restored with heavy-duty seals on-site.',
+    workDone: [
+      'Flushed hydraulic cylinder & replaced high-pressure nitrile seals',
+      'Re-machined piston rod and calibrated foot pedal lock valve',
+      'Load-tested under 250kg weight for rock-solid stability'
+    ],
     warranty: '12 Months Written Hydraulic Guarantee',
     image: '/images/salon-chair-repair.jpg'
   },
   {
-    id: 'work-2',
+    id: 'work-sofa-foam',
     category: 'sofa_repair',
     serviceName: 'High-Density Foam & Cushion Padding',
     tag: 'SOFA SAGGING RECONSTRUCTION & 40D FOAM',
     heading: 'Reconstructed Sunken Sofa Cushions with 40-Density Orthopedic Foam',
-    description: 'A 5-seater luxury curved couch suffered from sagging seat cushions and snapped support springs. We opened the base and reconstructed the entire seating core.',
+    description: 'Sagging seat cushions and sunken base completely rebuilt with virgin orthopedic foam.',
     workDone: [
-      'Stripped sunken base and replaced 8 broken zigzag carbon steel springs',
-      'Installed high-tensile elastic webbing with soundproof insulation lining',
+      'Replaced broken zigzag carbon steel springs & reinforced webbing',
       'Custom-cut 40D High-Resilience virgin molded foam for zero sag',
-      'Deep leather rejuvenation treatment with anti-crack protective balm'
+      'Treated upholstery with leather rejuvenation balm'
     ],
-    turnaround: 'Doorstep Service (Same Day)',
     warranty: '3-Year Cushion Sag Guarantee',
     image: '/images/luxury-curved-sofa.jpg'
-  },
-  {
-    id: 'work-3',
-    category: 'salon_chair',
-    serviceName: 'Reclining Mechanism & 360 Swivel Fix',
-    tag: 'BARBER RECLINER & CHEMICAL-PROOF UPHOLSTERY',
-    heading: 'Repaired Jammed Reclining Lever & Chemical-Resistant Salon Leather',
-    description: 'A vintage heavy-duty barber chair had a jammed reclining mechanism and hair bleach stains. We restored full smooth reclining and brand-new diamond stitched upholstery.',
-    workDone: [
-      'Replaced exhausted gas-spring shock absorber for multi-angle locking',
-      'Serviced 360-degree silent ball-bearing swivel rotation plate',
-      'Re-upholstered in chemical-proof, bleach-resistant Italian PU leather',
-      'Mirror buffing of chrome footrest and cast-iron circular base'
-    ],
-    turnaround: 'Completed in 24 Hours',
-    warranty: '12 Months Full Mechanism Warranty',
-    image: '/images/luxury-barber-chair.jpg'
-  },
-  {
-    id: 'work-4',
-    category: 'salon_chair',
-    serviceName: 'Salon Chair Leather Upholstery',
-    tag: 'COMMERCIAL SALON FLEET ATELIER',
-    heading: 'Overnight Fleet Maintenance of 12 Salon Chairs with Zero Downtime',
-    description: 'A flagship unisex luxury salon needed 12 styling chairs restored without losing a single hour of business. Our mobile workshop team arrived after closing hours.',
-    workDone: [
-      'Hydraulic pressure calibration and fluid top-up across all 12 chairs',
-      'Replaced loose armrest fittings and anti-scratch chrome floor rings',
-      'Repaired micro-tears in vinyl upholstery with seamless bonding',
-      'Certified each chair with official inspection compliance stickers'
-    ],
-    turnaround: 'Overnight Doorstep Service',
-    warranty: '12-Month Fleet Maintenance Contract',
-    image: '/images/bright-salon-chairs.jpg'
   }
 ];
 
@@ -187,7 +209,7 @@ function ProjectCard({ project, index }: { project: ProjectWork; index: number }
           }}
         />
 
-        {/* Turnaround Badge */}
+        {/* Doorstep Precision Badge */}
         <div
           style={{
             position: 'absolute',
@@ -206,8 +228,8 @@ function ProjectCard({ project, index }: { project: ProjectWork; index: number }
             boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
           }}
         >
-          <Clock size={14} color="#059669" />
-          <span>{project.turnaround}</span>
+          <Wrench size={14} color="#059669" />
+          <span>Doorstep Precision Repair</span>
         </div>
 
         {/* Project Number */}

@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar';
 import ContactSection from '@/components/ContactSection';
 import FAQSection from '@/components/FAQSection';
 import Footer from '@/components/Footer';
-import { MessageSquare, PhoneCall, Mail, MapPin, Clock } from 'lucide-react';
+import { MessageSquare, PhoneCall, Mail, MapPin } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Contact Us | Salon Chair Repair & Sofa Repair Service',
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main style={{ background: '#f8fafc', minHeight: '100vh' }}>
+    <main style={{ background: '#f8fafc', minHeight: '100vh', paddingTop: '64px' }}>
       <Navbar />
 
       {/* Main Contact Section */}

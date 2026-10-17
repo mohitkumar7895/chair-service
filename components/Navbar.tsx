@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useBooking } from '@/context/BookingContext';
 import { Phone, Wrench, Menu, X, ArrowRight, UserCog } from 'lucide-react';
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const { openBookingModal } = useBooking();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -13,7 +16,7 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const heroEl = document.getElementById('scroll-hero');
-      const threshold = heroEl ? heroEl.offsetHeight - 90 : 40;
+      const threshold = heroEl ? heroEl.offsetHeight - 90 : 30;
       setIsScrolled(window.scrollY > threshold);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -26,15 +29,18 @@ export default function Navbar() {
     { label: 'Services', href: '/services' },
     { label: 'Before & After', href: '/before-after' },
     { label: 'Why Choose Us', href: '/why-choose-us' },
+    { label: 'Gallery', href: '/gallery' },
     { label: 'Contact', href: '/contact' }
   ];
 
   const phone = process.env.NEXT_PUBLIC_PHONE || '+91 97723 81091';
   const rawPhone = phone.replace(/[^0-9+]/g, '');
 
+  const shouldBeSolid = !isHomePage || isScrolled;
+
   return (
     <>
-      {/* Sleek, Compact & Transparent Navbar */}
+      {/* Solid Navbar on other pages, Smooth transition on Home */}
       <header
         style={{
           position: 'fixed',
@@ -42,16 +48,16 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 950,
-          background: isScrolled
-            ? 'rgba(10, 10, 15, 0.92)'
+          background: shouldBeSolid
+            ? 'rgba(15, 23, 42, 0.96)'
             : 'transparent',
-          backdropFilter: isScrolled ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
-          borderBottom: isScrolled
-            ? '1px solid rgba(255, 255, 255, 0.1)'
+          backdropFilter: shouldBeSolid ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: shouldBeSolid ? 'blur(16px)' : 'none',
+          borderBottom: shouldBeSolid
+            ? '1px solid rgba(255, 255, 255, 0.12)'
             : '1px solid rgba(255, 255, 255, 0.05)',
-          boxShadow: isScrolled ? '0 8px 25px rgba(0, 0, 0, 0.4)' : 'none',
-          transition: 'all 0.3s ease'
+          boxShadow: shouldBeSolid ? '0 8px 30px rgba(0, 0, 0, 0.35)' : 'none',
+          transition: 'all 0.25s ease'
         }}
       >
         <div
@@ -104,7 +110,7 @@ export default function Navbar() {
                   textOverflow: 'ellipsis'
                 }}
               >
-                Salon Chair <span style={{ color: '#fbbf24' }}>&</span> Sofa
+                Chair <span style={{ color: '#fbbf24' }}>&</span> Recliner Repair
               </div>
               <div
                 style={{
@@ -116,7 +122,7 @@ export default function Navbar() {
                 }}
                 className="hide-mobile"
               >
-                Doorstep Master Workshop
+                Office • Recliner • Salon • Sofa
               </div>
             </div>
           </Link>

@@ -11,22 +11,22 @@ import {
   MapPin, 
   User, 
   ArrowRight,
-  CheckCircle2
+  MessageCircle
 } from 'lucide-react';
 import { ServiceCategory } from '@/models/types';
 
 export default function BookingModal() {
   const { isModalOpen, closeBookingModal, selectedService, submitBooking } = useBooking();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP || '919772381091';
 
-  // Simplified state: Only the essential doorstep fields
   const [formData, setFormData] = useState({
     customerName: '',
     phone: '',
     address: '',
     city: 'New Delhi / NCR',
-    category: 'salon_chair' as ServiceCategory,
-    serviceName: 'Hydraulic Pump & Base Repair'
+    category: 'office_chair' as ServiceCategory,
+    serviceName: 'Pneumatic Gas Lift & Hydraulic Cylinder Replacement'
   });
 
   // When selected service changes, prefill
@@ -69,6 +69,13 @@ export default function BookingModal() {
     }
   };
 
+  const categories: { key: ServiceCategory; label: string; defaultService: string }[] = [
+    { key: 'office_chair', label: '💺 Office Chair', defaultService: 'Pneumatic Gas Lift & Hydraulic Cylinder Replacement' },
+    { key: 'recliner_chair', label: '🛋️ Recliner', defaultService: 'Motorized & Electric Power Recliner Repair' },
+    { key: 'salon_chair', label: '✂️ Salon Chair', defaultService: 'Hydraulic Pump & Base Repair' },
+    { key: 'sofa_repair', label: '🛋️ Sofa / Couch', defaultService: '40D Sofa Cushion Foam Refilling' }
+  ];
+
   return (
     <div className="modal-backdrop" onClick={closeBookingModal}>
       <div
@@ -94,7 +101,7 @@ export default function BookingModal() {
               Schedule Doorstep Inspection
             </h3>
             <p style={{ color: '#64748b', fontSize: '0.86rem', margin: 0 }}>
-              Master technician visit at your salon or home with 1-year guarantee
+              Certified master technician visit with 1-year written warranty
             </p>
           </div>
 
@@ -117,53 +124,41 @@ export default function BookingModal() {
           </button>
         </div>
 
-        {/* Minimal High-Speed Form (Only 4 Essential Inputs) */}
+        {/* Minimal High-Speed Form */}
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {/* 1. Category Switcher (Salon Chair vs Sofa) */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, category: 'salon_chair', serviceName: 'Hydraulic Pump & Base Repair' })}
-              style={{
-                padding: '10px 12px',
-                borderRadius: '12px',
-                fontWeight: 700,
-                fontSize: '0.86rem',
-                border: '1.5px solid',
-                borderColor: formData.category === 'salon_chair' ? '#d97706' : '#e2e8f0',
-                background: formData.category === 'salon_chair' ? '#fffbeb' : '#ffffff',
-                color: formData.category === 'salon_chair' ? '#92400e' : '#64748b',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              ✂️ Salon Chair
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setFormData({ ...formData, category: 'sofa_repair', serviceName: '40D Sofa Cushion Foam Refilling' })}
-              style={{
-                padding: '10px 12px',
-                borderRadius: '12px',
-                fontWeight: 700,
-                fontSize: '0.86rem',
-                border: '1.5px solid',
-                borderColor: formData.category === 'sofa_repair' ? '#d97706' : '#e2e8f0',
-                background: formData.category === 'sofa_repair' ? '#fffbeb' : '#ffffff',
-                color: formData.category === 'sofa_repair' ? '#92400e' : '#64748b',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              🛋️ Sofa / Couch
-            </button>
+          {/* Category Switcher (4 Categories Grid) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+            {categories.map((cat) => {
+              const isSelected = formData.category === cat.key;
+              return (
+                <button
+                  key={cat.key}
+                  type="button"
+                  onClick={() => setFormData({ ...formData, category: cat.key, serviceName: cat.defaultService })}
+                  style={{
+                    padding: '9px 10px',
+                    borderRadius: '12px',
+                    fontWeight: 700,
+                    fontSize: '0.82rem',
+                    border: '1.5px solid',
+                    borderColor: isSelected ? '#d97706' : '#e2e8f0',
+                    background: isSelected ? '#fffbeb' : '#ffffff',
+                    color: isSelected ? '#92400e' : '#64748b',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    textAlign: 'center'
+                  }}
+                >
+                  {cat.label}
+                </button>
+              );
+            })}
           </div>
 
-          {/* 2. Customer Name / Salon Name */}
+          {/* Customer Name */}
           <div>
             <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '5px' }}>
-              Name / Salon Name *
+              Your Name / Office / Salon Name *
             </label>
             <div style={{ position: 'relative' }}>
               <input
@@ -171,7 +166,7 @@ export default function BookingModal() {
                 required
                 value={formData.customerName}
                 onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                placeholder="e.g. Looks Salon / Rajesh Sharma"
+                placeholder="e.g. Rahul Sharma / DLF Cyber Hub"
                 style={{
                   width: '100%',
                   padding: '11px 14px 11px 36px',
@@ -187,10 +182,10 @@ export default function BookingModal() {
             </div>
           </div>
 
-          {/* 3. Phone / WhatsApp Number */}
+          {/* Phone Number */}
           <div>
             <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '5px' }}>
-              Mobile / WhatsApp Number *
+              Phone Number (For Technician Call) *
             </label>
             <div style={{ position: 'relative' }}>
               <input
@@ -198,7 +193,7 @@ export default function BookingModal() {
                 required
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="+91 97723 81091"
+                placeholder="+91 98765 43210"
                 style={{
                   width: '100%',
                   padding: '11px 14px 11px 36px',
@@ -214,10 +209,10 @@ export default function BookingModal() {
             </div>
           </div>
 
-          {/* 4. Doorstep Address & Area */}
+          {/* Address */}
           <div>
             <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: '5px' }}>
-              Doorstep Address / Salon Location *
+              Complete Address / Location *
             </label>
             <div style={{ position: 'relative' }}>
               <input
@@ -225,7 +220,7 @@ export default function BookingModal() {
                 required
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Shop / House No, Street, Area, City"
+                placeholder="Street address, building, apartment or office floor"
                 style={{
                   width: '100%',
                   padding: '11px 14px 11px 36px',
@@ -257,7 +252,7 @@ export default function BookingModal() {
             }}
           >
             <ShieldCheck size={16} color="#16a34a" />
-            <span>Free Doorstep Inspection • 100% Genuine OEM Spares</span>
+            <span>Free Doorstep Inspection • 100% Genuine OEM Spares & Warranty</span>
           </div>
 
           {/* Submit CTA */}
@@ -266,8 +261,8 @@ export default function BookingModal() {
             disabled={isSubmitting}
             className="btn-gold"
             style={{
-              padding: '14px',
-              fontSize: '0.96rem',
+              padding: '13px',
+              fontSize: '0.94rem',
               fontWeight: 800,
               width: '100%',
               display: 'flex',
@@ -281,6 +276,30 @@ export default function BookingModal() {
             <span>{isSubmitting ? 'Confirming Visit...' : 'Confirm Doorstep Visit'}</span>
             <ArrowRight size={16} />
           </button>
+
+          {/* Or WhatsApp quick CTA */}
+          <div style={{ textAlign: 'center', marginTop: '4px' }}>
+            <span style={{ fontSize: '0.78rem', color: '#64748b' }}>or prefer instant messaging? </span>
+            <a
+              href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
+                `Hi, I need doorstep repair for my ${formData.category.replace('_', ' ')}. Please send technician details.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: '#059669',
+                fontWeight: 700,
+                fontSize: '0.82rem',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <MessageCircle size={14} />
+              <span>Book via WhatsApp</span>
+            </a>
+          </div>
         </form>
       </div>
     </div>

@@ -44,7 +44,7 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
-  const [selectedCategoryTab, setSelectedCategoryTab] = useState<ServiceCategory>('salon_chair');
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState<ServiceCategory>('office_chair');
   const [toasts, setToasts] = useState<ToastNotification[]>([]);
 
   const showToast = (type: 'success' | 'error' | 'info', title: string, message: string) => {

@@ -39,7 +39,7 @@ export default function WhyChooseUsPage() {
   ];
 
   return (
-    <main style={{ background: '#f8fafc', minHeight: '100vh' }}>
+    <main style={{ background: '#f8fafc', minHeight: '100vh', paddingTop: '64px' }}>
       <Navbar />
 
       {/* Why Choose Us Perks Grid */}

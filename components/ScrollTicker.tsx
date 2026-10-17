@@ -5,14 +5,14 @@ import { Sparkles, ShieldCheck, Wrench, Clock, Award, CheckCircle2 } from 'lucid
 
 export default function ScrollTicker() {
   const items = [
-    { text: '100% ON-SITE DOORSTEP WORKSHOP', icon: Wrench },
-    { text: 'HYDRAULIC PUMP 250KG LOAD TESTED', icon: ShieldCheck },
-    { text: 'GERMAN NITRILE HIGH-PRESSURE SEALS', icon: Sparkles },
-    { text: '40D ZERO-SAG ORTHOPEDIC MEMORY FOAM', icon: Award },
-    { text: 'SAME-DAY 2-HOUR RAPID TURNAROUND', icon: Clock },
+    { text: 'OFFICE CHAIR SINKING FIX • CLASS-4 BIFMA GAS LIFT', icon: Wrench },
+    { text: 'MOTORIZED & MANUAL RECLINER MECHANISM EXPERTS', icon: ShieldCheck },
+    { text: 'EXECUTIVE BOSS LEATHER & 40D ORTHOPEDIC FOAM', icon: Award },
+    { text: 'ERGONOMIC MESH RESTORE & SILENT CASTER WHEELS', icon: Sparkles },
+    { text: 'HYDRAULIC SALON CHAIR PUMP 250KG LOAD TESTED', icon: ShieldCheck },
+    { text: '100% ON-SITE DOORSTEP INSPECTION & REPAIR', icon: Wrench },
     { text: 'OFFICIAL 12-MONTH WRITTEN WARRANTY', icon: CheckCircle2 },
-    { text: '15,000+ RESTORATIONS COMPLETED', icon: Award },
-    { text: 'ZERO SALON DOWNTIME GUARANTEE', icon: ShieldCheck },
+    { text: '15,000+ CHAIRS & SOFAS RESTORED', icon: Award },
   ];
 
   return (

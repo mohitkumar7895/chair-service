@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
-import { ServiceItem, BookingRequest, InquiryMessage, CustomerReview, AdminStats } from '@/models/types';
-import { INITIAL_SERVICES, INITIAL_BOOKINGS, INITIAL_INQUIRIES, INITIAL_REVIEWS } from '@/lib/initialData';
+import { ServiceItem, BookingRequest, InquiryMessage, CustomerReview, AdminStats, GalleryItem } from '@/models/types';
+import { INITIAL_SERVICES, INITIAL_BOOKINGS, INITIAL_INQUIRIES, INITIAL_REVIEWS, INITIAL_GALLERY } from '@/lib/initialData';
 
 
 // Fallback in-memory database store
@@ -8,6 +8,7 @@ let memoryServices = [...INITIAL_SERVICES];
 let memoryBookings = [...INITIAL_BOOKINGS];
 let memoryInquiries = [...INITIAL_INQUIRIES];
 let memoryReviews = [...INITIAL_REVIEWS];
+let memoryGallery = [...INITIAL_GALLERY];
 
 let pool: mysql.Pool | null = null;
 let mysqlTested = false;
@@ -288,6 +289,8 @@ export async function getAdminStats(): Promise<AdminStats> {
   const estimatedRevenue = bookings
     .filter((b) => b.status !== 'cancelled')
     .reduce((sum, b) => sum + (b.estimatedCost || 0), 0);
+  const officeChairBookings = bookings.filter((b) => b.category === 'office_chair').length;
+  const reclinerBookings = bookings.filter((b) => b.category === 'recliner_chair').length;
   const salonChairBookings = bookings.filter((b) => b.category === 'salon_chair').length;
   const sofaBookings = bookings.filter((b) => b.category === 'sofa_repair').length;
 
@@ -298,8 +301,84 @@ export async function getAdminStats(): Promise<AdminStats> {
     completedRepairs,
     cancelledRepairs,
     estimatedRevenue,
+    officeChairBookings,
+    reclinerBookings,
     salonChairBookings,
     sofaBookings,
     totalInquiries: inquiries.length
   };
+}
+
+// -------------------------------------------------------------
+// Database Operations: Gallery
+// -------------------------------------------------------------
+export async function getGallery(): Promise<GalleryItem[]> {
+  const p = await getDbPool();
+  if (p) {
+    try {
+      await p.query(`
+        CREATE TABLE IF NOT EXISTS gallery (
+          id VARCHAR(64) PRIMARY KEY,
+          title VARCHAR(255) NOT NULL,
+          category VARCHAR(50) NOT NULL,
+          image_url VARCHAR(500) NOT NULL,
+          description TEXT,
+          created_at VARCHAR(50)
+        )
+      `);
+      const [rows] = await p.query('SELECT * FROM gallery ORDER BY created_at DESC');
+      if (Array.isArray(rows) && rows.length > 0) {
+        return (rows as any[]).map((r) => ({
+          id: r.id,
+          title: r.title,
+          category: r.category,
+          imageUrl: r.image_url,
+          description: r.description || '',
+          createdAt: r.created_at || ''
+        }));
+      }
+    } catch (err) {
+      console.error('Error fetching gallery from MySQL, using fallback:', err);
+    }
+  }
+  return memoryGallery;
+}
+
+export async function addGalleryItem(item: Omit<GalleryItem, 'id' | 'createdAt'>): Promise<GalleryItem> {
+  const newItem: GalleryItem = {
+    id: `gal-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    title: item.title,
+    category: item.category,
+    imageUrl: item.imageUrl,
+    description: item.description || '',
+    createdAt: new Date().toISOString().split('T')[0]
+  };
+
+  const p = await getDbPool();
+  if (p) {
+    try {
+      await p.query(
+        'INSERT INTO gallery (id, title, category, image_url, description, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+        [newItem.id, newItem.title, newItem.category, newItem.imageUrl, newItem.description, newItem.createdAt]
+      );
+    } catch (err) {
+      console.error('Error adding gallery item to MySQL:', err);
+    }
+  }
+
+  memoryGallery.unshift(newItem);
+  return newItem;
+}
+
+export async function deleteGalleryItem(id: string): Promise<boolean> {
+  const p = await getDbPool();
+  if (p) {
+    try {
+      await p.query('DELETE FROM gallery WHERE id = ?', [id]);
+    } catch (err) {
+      console.error('Error deleting gallery item from MySQL:', err);
+    }
+  }
+  memoryGallery = memoryGallery.filter((item) => item.id !== id);
+  return true;
 }

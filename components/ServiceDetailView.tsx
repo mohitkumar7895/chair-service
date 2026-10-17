@@ -124,10 +124,10 @@ export default function ServiceDetailView({ service }: ServiceDetailViewProps) {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Clock size={20} color="#059669" />
+                <Wrench size={20} color="#059669" />
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>Turnaround</div>
-                  <div style={{ fontSize: '0.9rem', color: '#0f172a', fontWeight: 800 }}>{service.turnaroundTime}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>Service Type</div>
+                  <div style={{ fontSize: '0.9rem', color: '#0f172a', fontWeight: 800 }}>Doorstep Repair</div>
                 </div>
               </div>
 

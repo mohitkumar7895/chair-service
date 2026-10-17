@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
-import { BookingRequest, InquiryMessage, AdminStats, ServiceItem } from '@/models/types';
+import { BookingRequest, InquiryMessage, AdminStats, ServiceItem, GalleryItem, ServiceCategory } from '@/models/types';
 import {
   Lock,
   Wrench,
@@ -27,7 +28,10 @@ import {
   X,
   ShieldCheck,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  Camera,
+  Upload,
+  Plus
 } from 'lucide-react';
 
 export default function AdminPage() {
@@ -44,28 +48,40 @@ export default function AdminPage() {
   const [bookings, setBookings] = useState<BookingRequest[]>([]);
   const [inquiries, setInquiries] = useState<InquiryMessage[]>([]);
   const [services, setServices] = useState<ServiceItem[]>([]);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'bookings' | 'inquiries' | 'services' | 'database'>('dashboard');
+  const [gallery, setGallery] = useState<GalleryItem[]>([]);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'bookings' | 'inquiries' | 'services' | 'gallery' | 'database'>('dashboard');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
+  // Gallery photo upload form state
+  const [newPhotoTitle, setNewPhotoTitle] = useState('');
+  const [newPhotoCategory, setNewPhotoCategory] = useState<ServiceCategory>('office_chair');
+  const [newPhotoDesc, setNewPhotoDesc] = useState('');
+  const [newPhotoUrl, setNewPhotoUrl] = useState('');
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [submittingPhoto, setSubmittingPhoto] = useState(false);
+  const [photoMessage, setPhotoMessage] = useState('');
+
   // Fetch dashboard data
   const loadDashboardData = async () => {
     setIsDataLoading(true);
     try {
-      const [statsRes, bookingsRes, inquiriesRes, servicesRes] = await Promise.all([
+      const [statsRes, bookingsRes, inquiriesRes, servicesRes, galleryRes] = await Promise.all([
         fetch('/api/stats').then((r) => r.json()),
         fetch('/api/bookings').then((r) => r.json()),
         fetch('/api/inquiries').then((r) => r.json()),
-        fetch('/api/services').then((r) => r.json())
+        fetch('/api/services').then((r) => r.json()),
+        fetch('/api/gallery').then((r) => r.json())
       ]);
 
       if (statsRes.success) setStats(statsRes.stats);
       if (bookingsRes.success) setBookings(bookingsRes.bookings);
       if (inquiriesRes.success) setInquiries(inquiriesRes.inquiries);
       if (servicesRes.success) setServices(servicesRes.services);
+      if (galleryRes.success && Array.isArray(galleryRes.gallery)) setGallery(galleryRes.gallery);
     } catch (err) {
       console.error('Error loading admin data:', err);
     } finally {
@@ -96,6 +112,52 @@ export default function AdminPage() {
     setIsLoggingIn(false);
     if (!res.success) {
       setLoginError(res.error || 'Demo login failed');
+    }
+  };
+
+  // Direct Multi-Photo Upload Handler (Ek Sath Sabhi Photos Seedha Upload)
+  const handleDirectMultiFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingFile(true);
+    setPhotoMessage(`Uploading ${files.length} photo(s) directly to public gallery...`);
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.items)) {
+        setGallery((prev) => [...data.items, ...prev]);
+        setPhotoMessage(`✅ ${data.items.length} photo(s) uploaded and published directly to gallery!`);
+        e.target.value = '';
+      } else {
+        setPhotoMessage(data.error || 'Failed to upload photos');
+      }
+    } catch (err) {
+      setPhotoMessage('Upload error: ' + (err as Error).message);
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const handleDeletePhoto = async (id: string) => {
+    if (!confirm('Are you sure you want to remove this photo from the gallery?')) return;
+    try {
+      const res = await fetch(`/api/gallery?id=${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setGallery((prev) => prev.filter((p) => p.id !== id));
+      }
+    } catch (err) {
+      console.error('Failed to delete photo:', err);
     }
   };
 
@@ -321,6 +383,7 @@ export default function AdminPage() {
     { id: 'bookings', label: 'Repair Bookings', icon: CalendarCheck, badge: pendingCount > 0 ? `${pendingCount} new` : `${bookings.length}` },
     { id: 'inquiries', label: 'Customer Inquiries', icon: Inbox, badge: inquiries.length > 0 ? `${inquiries.length}` : undefined },
     { id: 'services', label: 'Services Catalog', icon: Wrench, badge: `${services.length}` },
+    { id: 'gallery', label: 'Gallery & Photos', icon: Camera, badge: `${gallery.length}` },
     { id: 'database', label: 'MySQL Database & ENV', icon: Database }
   ];
 
@@ -668,7 +731,7 @@ export default function AdminPage() {
                       {stats.totalBookings}
                     </div>
                     <div style={{ fontSize: '0.76rem', color: '#64748b' }}>
-                      {stats.salonChairBookings} Chairs • {stats.sofaBookings} Sofas
+                      {(stats.officeChairBookings || 0)} Office • {(stats.reclinerBookings || 0)} Recliner • {stats.salonChairBookings} Salon • {stats.sofaBookings} Sofas
                     </div>
                   </div>
 
@@ -872,6 +935,8 @@ export default function AdminPage() {
                     }}
                   >
                     <option value="all">All Categories</option>
+                    <option value="office_chair">Office Chairs Only</option>
+                    <option value="recliner_chair">Recliners Only</option>
                     <option value="salon_chair">Salon Chairs Only</option>
                     <option value="sofa_repair">Sofas Only</option>
                   </select>
@@ -930,11 +995,31 @@ export default function AdminPage() {
                               fontWeight: 700,
                               padding: '2px 8px',
                               borderRadius: '6px',
-                              background: b.category === 'salon_chair' ? '#fffbeb' : '#f0fdf4',
-                              color: b.category === 'salon_chair' ? '#92400e' : '#166534'
+                              background:
+                                b.category === 'office_chair'
+                                  ? '#eff6ff'
+                                  : b.category === 'recliner_chair'
+                                  ? '#faf5ff'
+                                  : b.category === 'salon_chair'
+                                  ? '#fffbeb'
+                                  : '#f0fdf4',
+                              color:
+                                b.category === 'office_chair'
+                                  ? '#1d4ed8'
+                                  : b.category === 'recliner_chair'
+                                  ? '#7e22ce'
+                                  : b.category === 'salon_chair'
+                                  ? '#92400e'
+                                  : '#166534'
                             }}
                           >
-                            {b.category === 'salon_chair' ? '✂️ Salon Chair' : '🛋️ Sofa Repair'}
+                            {b.category === 'office_chair'
+                              ? '💺 Office Chair'
+                              : b.category === 'recliner_chair'
+                              ? '🛋️ Recliner'
+                              : b.category === 'salon_chair'
+                              ? '✂️ Salon Chair'
+                              : '🛋️ Sofa Repair'}
                           </span>
                         </div>
 
@@ -1161,7 +1246,225 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 5: DATABASE & ENVIRONMENT */}
+          {/* TAB 5: GALLERY & DIRECT MULTI-PHOTO UPLOAD MANAGER */}
+          {activeTab === 'gallery' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+              {/* Direct Multi-Photo Upload Dropzone */}
+              <div
+                className="glass-panel"
+                style={{
+                  padding: '32px 24px',
+                  borderRadius: '20px',
+                  background: '#ffffff',
+                  border: '1px solid #e2e8f0',
+                  boxShadow: '0 10px 30px rgba(15, 23, 42, 0.05)',
+                  textAlign: 'center'
+                }}
+              >
+                <div style={{ maxWidth: '640px', margin: '0 auto 20px' }}>
+                  <div
+                    style={{
+                      width: '50px',
+                      height: '50px',
+                      borderRadius: '14px',
+                      background: '#fef3c7',
+                      color: '#d97706',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 12px'
+                    }}
+                  >
+                    <Upload size={24} />
+                  </div>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px' }}>
+                    Direct Photo Upload (Ek Sath Multiple Photos Upload Karein)
+                  </h3>
+                  <p style={{ fontSize: '0.88rem', color: '#64748b', margin: 0, lineHeight: 1.5 }}>
+                    Apne phone ya computer se 1, 5, ya 20+ photos ek sath select karein. Koi form bharne ki jarurat nahi hai, sabhi photos seedha gallery me publish ho jayengi!
+                  </p>
+                </div>
+
+                {photoMessage && (
+                  <div
+                    style={{
+                      maxWidth: '640px',
+                      margin: '0 auto 20px',
+                      padding: '12px 18px',
+                      borderRadius: '12px',
+                      background: photoMessage.includes('✅') || photoMessage.includes('successfully') ? '#ecfdf5' : '#eff6ff',
+                      border: photoMessage.includes('✅') || photoMessage.includes('successfully') ? '1px solid #a7f3d0' : '1px solid #bfdbfe',
+                      color: photoMessage.includes('✅') || photoMessage.includes('successfully') ? '#065f46' : '#1e40af',
+                      fontSize: '0.9rem',
+                      fontWeight: 700
+                    }}
+                  >
+                    {photoMessage}
+                  </div>
+                )}
+
+                {/* Big Drag & Drop + Multi-Select Box */}
+                <div
+                  style={{
+                    border: '2px dashed #d97706',
+                    borderRadius: '18px',
+                    padding: '36px 20px',
+                    background: 'radial-gradient(circle at 50% 50%, #fffbeb 0%, #ffffff 80%)',
+                    position: 'relative',
+                    cursor: 'pointer',
+                    maxWidth: '680px',
+                    margin: '0 auto',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleDirectMultiFileUpload}
+                    disabled={uploadingFile}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      opacity: 0,
+                      cursor: 'pointer',
+                      zIndex: 20
+                    }}
+                  />
+
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                    <div
+                      style={{
+                        width: '56px',
+                        height: '56px',
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#ffffff',
+                        boxShadow: '0 6px 18px rgba(217, 119, 6, 0.35)'
+                      }}
+                    >
+                      {uploadingFile ? <RefreshCw size={26} className="animate-spin" /> : <Camera size={26} />}
+                    </div>
+
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a' }}>
+                      {uploadingFile ? 'Uploading Selected Photos...' : 'Click Here to Select Multiple Photos'}
+                    </div>
+
+                    <div style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>
+                      Supports PNG, JPG, JPEG, WEBP • Ek sath kitni bhi photos select kar sakte hain
+                    </div>
+
+                    <div
+                      className="btn-gold"
+                      style={{
+                        marginTop: '8px',
+                        padding: '10px 24px',
+                        fontSize: '0.85rem',
+                        pointerEvents: 'none'
+                      }}
+                    >
+                      <span>📁 Select Photos from Device</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Photos List Grid */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                      Live Gallery Photos ({gallery.length})
+                    </h3>
+                    <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '2px 0 0' }}>
+                      Ye sabhi photos public website ke Gallery page par live dikh rahi hain.
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/gallery"
+                    target="_blank"
+                    className="btn-secondary"
+                    style={{
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      padding: '8px 16px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <span>Open Public Gallery</span>
+                    <ExternalLink size={14} />
+                  </Link>
+                </div>
+
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                    gap: '16px'
+                  }}
+                >
+                  {gallery.map((photo) => (
+                    <div
+                      key={photo.id}
+                      className="glass-panel"
+                      style={{
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        background: '#ffffff',
+                        border: '1px solid #e2e8f0',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                    >
+                      <div style={{ position: 'relative', width: '100%', height: '180px', background: '#f8fafc' }}>
+                        <Image
+                          src={photo.imageUrl}
+                          alt={photo.title || 'Gallery photo'}
+                          fill
+                          style={{ objectFit: 'contain', padding: '6px' }}
+                          sizes="240px"
+                        />
+                      </div>
+
+                      <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 600 }}>
+                          {photo.createdAt || 'Live'}
+                        </span>
+
+                        <button
+                          onClick={() => handleDeletePhoto(photo.id)}
+                          style={{
+                            color: '#ef4444',
+                            background: '#fee2e2',
+                            border: '1px solid #fecaca',
+                            padding: '5px 12px',
+                            borderRadius: '8px',
+                            fontSize: '0.74rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <Trash2 size={12} />
+                          <span>Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: DATABASE & ENVIRONMENT */}
           {activeTab === 'database' && (
             <div className="glass-panel" style={{ padding: '28px', borderRadius: '18px', background: '#ffffff' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
