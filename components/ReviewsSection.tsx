@@ -12,11 +12,11 @@ export default function ReviewsSection() {
         <div className="scroll-reveal" style={{ textAlign: 'center', maxWidth: '750px', margin: '0 auto 28px' }}>
           <div className="badge-gold" style={{ marginBottom: '10px' }}>
             <Star size={14} fill="#f59e0b" color="#f59e0b" />
-            <span>5-Star Rated Service</span>
+            <span>Verified Customer Reviews</span>
           </div>
           <TypewriterHeading
-            text="Trusted by"
-            highlightText="500+ Luxury Salons & Homeowners"
+            text="What Our Clients"
+            highlightText="Say About Our Work"
             style={{
               fontSize: 'clamp(2rem, 3.2vw, 2.7rem)',
               fontWeight: 800,
@@ -26,7 +26,7 @@ export default function ReviewsSection() {
             }}
           />
           <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.5 }}>
-            Hear from salon franchise directors, barbers, and luxury apartment owners who restored their chairs and sofas with our specialized service.
+            Read real feedback from corporate offices, homeowners, and businesses who got their chairs, recliners, and sofas repaired at their doorstep.
           </p>
         </div>
 
